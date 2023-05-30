@@ -1,0 +1,16 @@
+.claim {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 48%;
+  padding: var(--spacing-l);
+  border-radius: var(--radius-m);
+  border: solid 1px rgba(var(--color-stable), 1);
+}
+
+.content {
+  padding-top: var(--spacing-s);
+}
+
+.button {
+  padding-top: var(--spacing-l);
+}

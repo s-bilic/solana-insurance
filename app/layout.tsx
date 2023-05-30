@@ -1,8 +1,12 @@
-import "./globals.css";
-import styles from "./styles/layout.module.css";
+import "./styles/globals.scss";
+import styles from "./styles/layout.module.scss";
 import React from "react";
 import { Inter } from "next/font/google";
-import Wallet from "./components/wallet/wallet";
+import dynamic from "next/dynamic";
+
+const Wallet = dynamic(() => import("./components/wallet/wallet"), {
+  ssr: false,
+});
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,0 +1,281 @@
+@import "./mixins.scss";
+
+:root {
+  --color-dark: 17, 17, 17;
+  --color-light: 255, 255, 255;
+  --color-positive: 41, 145, 250;
+  --color-balanced: 82, 196, 26;
+  --color-royal: 80, 69, 224;
+  --color-assertive: 223, 15, 15;
+  --color-energized: 249, 144, 0;
+  --color-stable: 234, 234, 234;
+  --color-stable-500: 148, 148, 154;
+  --color-stable-700: 112, 112, 118;
+  --font-xxs: 12px;
+  --font-xs: 14px;
+  --font-s: 16px;
+  --font-m: 18px;
+  --font-l: 24px;
+  --font-xl: 30px;
+  --font-xxl: 36px;
+  --font-xxxl: 48px;
+  --font-xxxxl: 60px;
+  --spacing-xs: 5px;
+  --spacing-s: 10px;
+  --spacing-m: 15px;
+  --spacing-l: 20px;
+  --spacing-xl: 30px;
+  --spacing-xxl: 40px;
+  --radius-s: 5px;
+  --radius-m: 10px;
+  --radius-l: 15px;
+  --shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  --shadow-s: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+  --shadow-m: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  --global-width: 880px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  padding: var(--spacing-xxl) 0;
+}
+
+button {
+  border: none;
+  padding: var(--spacing-s) var(--spacing-l);
+  border-radius: var(--radius-s);
+  cursor: pointer;
+  background: none;
+  border: solid 1px rgba(var(--color-stable), 1);
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+p {
+  line-height: 1.3;
+  font-size: var(--font-m);
+}
+
+h1 {
+  font-size: var(--font-xxxl);
+
+  @include medium {
+    font-size: var(--font-xxxxl);
+  }
+}
+
+h2 {
+  font-size: var(--font-xxl);
+
+  @include medium {
+    font-size: var(--font-xxxl);
+  }
+}
+
+h3 {
+  font-size: var(--font-xl);
+
+  @include medium {
+    font-size: var(--font-xxl);
+  }
+}
+
+h4 {
+  font-size: var(--font-l);
+
+  @include medium {
+    font-size: var(--font-xl);
+  }
+}
+
+h5 {
+  font-size: var(--font-m);
+  font-weight: 600;
+
+  @include medium {
+    font-size: var(--font-l);
+  }
+}
+
+h6 {
+  font-size: var(--font-s);
+  font-weight: 600;
+  @include medium {
+    font-size: var(--font-m);
+  }
+}
+
+.color-transparent {
+  color: transparent;
+}
+
+.color-light {
+  color: rgba(var(--color-light), 1);
+}
+
+.color-dark {
+  color: rgba(var(--color-dark), 1);
+}
+
+.color-positive  {
+  color: rgba(var(--color-positive), 1);
+}
+
+.color-balanced {
+  color: rgba(var(--color-balanced), 1);
+}
+
+.color-royal {
+  color: rgba(var(--color-royal), 1);
+}
+
+.color-assertive {
+  color: rgba(var(--color-assertive), 1);
+}
+
+.color-energized {
+  color: rgba(var(--color-energized), 1);
+}
+
+.color-stable {
+  color: rgba(var(--color-stable), 1);
+}
+
+.color-stable-500 {
+  color: rgba(var(--color-stable-500), 1);
+}
+
+.color-stable-700 {
+  color: rgba(var(--color-stable-700), 1);
+}
+
+.background-transparent {
+  background-color: transparent;
+}
+
+.background-light {
+  background-color: rgba(var(--color-light), 1);
+}
+
+.background-dark {
+  background-color: rgba(var(--color-dark), 1);
+}
+
+.background-positive {
+  background-color: rgba(var(--color-positive), 1);
+}
+
+.background-royal {
+  background-color: rgba(var(--color-royal), 1);
+}
+
+.background-balanced {
+  background-color: rgba(var(--color-balanced), 1);
+}
+
+.background-assertive {
+  background-color: rgba(var(--color-assertive), 1);
+}
+
+.background-energized {
+  background-color: rgba(var(--color-energized), 1);
+}
+
+.background-stable {
+  background-color: rgba(var(--color-stable), 1);
+}
+
+.background-stable-500 {
+  background-color: rgba(var(--color-stable-500), 1);
+}
+
+.background-stable-700 {
+  background-color: rgba(var(--color-stable-700), 1);
+}
+
+.font-xxs {
+  font-size: var(--font-xxs);
+}
+
+.font-xs {
+  font-size: var(--font-xs);
+}
+
+.font-s {
+  font-size: var(--font-s);
+}
+
+.font-m {
+  font-size: var(--font-m);
+}
+
+.font-l {
+  font-size: var(--font-l);
+}
+
+.font-xl {
+  font-size: var(--font-xl);
+}
+
+.font-xxl {
+  font-size: var(--font-xxl);
+}
+
+.font-xxxl {
+  font-size: var(--font-xxxl);
+}
+
+.font-xxxxl {
+  font-size: var(--font-xxxxl);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.ReactModal__Overlay  {
+  background-color: rgba(var(--color-dark), 0.2) !important;
+  z-index: 2;
+}

@@ -1,0 +1,10 @@
+.claims {
+  margin-top: 100px;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-m);
+  padding-top: var(--spacing-l);
+}
