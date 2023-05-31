@@ -40,6 +40,11 @@
   box-sizing: border-box;
 }
 
+button.wallet-adapter-button {
+  background-color: transparent !important;
+  color: rgba(var(--color-dark), 1);
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -47,10 +52,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-main {
-  padding: var(--spacing-xxl) 0;
+  background: radial-gradient(circle, rgba(29,50,73,1) 0%, rgba(8,26,46,1) 100%);
 }
 
 button {

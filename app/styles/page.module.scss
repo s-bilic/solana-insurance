@@ -1,9 +1,18 @@
+.fullWidth {
+  background-color: rgba(var(--color-light), 1);
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
 .userWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.claimsWrapper {
-  
+  max-width: var(--global-width);
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-l);
 }
