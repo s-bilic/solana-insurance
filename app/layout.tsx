@@ -3,6 +3,7 @@ import styles from "./styles/layout.module.scss";
 import React from "react";
 import { Inter } from "next/font/google";
 import dynamic from "next/dynamic";
+import { ConfigProvider } from "./lib/antd";
 
 const Wallet = dynamic(() => import("./components/wallet/wallet"), {
   ssr: false,
@@ -23,9 +24,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className={styles.container}>
-          <Wallet>{children}</Wallet>
-        </div>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#00ff93",
+              colorTextLightSolid: "#000",
+            },
+          }}
+        >
+          <div className={styles.container}>
+            <Wallet>{children}</Wallet>
+          </div>
+        </ConfigProvider>
       </body>
     </html>
   );

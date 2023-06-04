@@ -3,13 +3,12 @@
 import React from "react";
 import classNames from "classnames/bind";
 import styles from "./claims.module.scss";
-import Claim from "../claim/claim";
 import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
-import { Card, Button, Row, Col, Space, Descriptions } from "antd";
+import { Card, Button, Row, Col, Space, Descriptions, Tag } from "antd";
 
 const cx = classNames.bind(styles);
 
@@ -40,6 +39,15 @@ const Claims = ({ className, title, items }: IProps) => {
                   size="middle"
                   style={{ display: "flex" }}
                 >
+                  <Tag icon={<CheckCircleOutlined />} color="success">
+                    approved
+                  </Tag>
+                  {/* <Tag icon={<SyncOutlined spin />} color="processing">
+                    in progress
+                  </Tag>
+                  <Tag icon={<CloseCircleOutlined />} color="error">
+                    denied
+                  </Tag> */}
                   {item.content}
                   <Descriptions>
                     <Descriptions.Item label="Loss">$50</Descriptions.Item>
