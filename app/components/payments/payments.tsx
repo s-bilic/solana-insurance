@@ -5,6 +5,7 @@ import classNames from "classnames/bind";
 import styles from "./payments.module.scss";
 import { Space, Table, Tag, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import SendSolana from "app/utils/sendSolana";
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -12,6 +13,10 @@ interface IProps {
 }
 
 const Payments = ({ className }: IProps) => {
+  const { init, confirmed, processing } = SendSolana();
+
+  console.log(confirmed, "c");
+  console.log(processing, "p");
   const classes = cx(
     {
       payments: true,
@@ -69,7 +74,11 @@ const Payments = ({ className }: IProps) => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button disabled={record?.status[0] === "paid"} type={"primary"}>
+          <Button
+            onClick={() => init(0.1)}
+            disabled={record?.status[0] === "paid" || confirmed}
+            type={"primary"}
+          >
             Pay
           </Button>
         </Space>
