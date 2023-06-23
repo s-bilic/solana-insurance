@@ -3,8 +3,8 @@
 import React from "react";
 import classNames from "classnames/bind";
 import styles from "./heading.module.scss";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import User from "../user/user";
+import SignIn from "../signIn/signIn";
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -23,7 +23,7 @@ const Heading = ({ className }: IProps) => {
     <div className={classes}>
       <div className={styles.wrapper}>
         <User />
-        <WalletMultiButton />
+        <SignIn />
       </div>
     </div>
   );

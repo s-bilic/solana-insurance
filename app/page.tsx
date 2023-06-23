@@ -1,12 +1,16 @@
 import styles from "./styles/page.module.scss";
-
+// import { getServerSession } from "next-auth/next";
+// import { authOptions } from "./lib/auth";
 import Claims from "./components/claims/claims";
 import FormClaim from "./components/formClaim/formClaim";
 import Heading from "./components/heading/heading";
 import Payments from "./components/payments/payments";
 import { Tabs, TabsProps } from "./lib/antd";
 
-export default function Home() {
+export default async function Home() {
+  // const { session } = await getServerSession(authOptions);
+  // console.log(session);
+
   const claimsData = [
     {
       title: "Defect computer",
@@ -53,11 +57,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <Heading />
-      <Tabs
-        tabBarStyle={{ color: "white" }}
-        defaultActiveKey="1"
-        items={items}
-      />
+      <Tabs defaultActiveKey="1" items={items} />
     </main>
   );
 }

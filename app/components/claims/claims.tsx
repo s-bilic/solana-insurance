@@ -9,7 +9,6 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import { Card, Button, Row, Col, Space, Descriptions, Tag } from "antd";
-
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -32,16 +31,22 @@ const Claims = ({ className, title, items }: IProps) => {
       <div className={styles.items}>
         <Row gutter={[24, 24]}>
           {items?.map((item, index) => (
-            <Col key={index} span={12}>
-              <Card {...item}>
+            <Col key={index} span={24}>
+              <Card
+                style={{ border: "solid 1px #dddddd" }}
+                headStyle={{ borderBottom: "solid 1px #dddddd" }}
+                extra={
+                  <Tag icon={<CheckCircleOutlined />} color="success">
+                    approved
+                  </Tag>
+                }
+                {...item}
+              >
                 <Space
                   direction="vertical"
                   size="middle"
                   style={{ display: "flex" }}
                 >
-                  <Tag icon={<CheckCircleOutlined />} color="success">
-                    approved
-                  </Tag>
                   {/* <Tag icon={<SyncOutlined spin />} color="processing">
                     in progress
                   </Tag>
@@ -53,11 +58,9 @@ const Claims = ({ className, title, items }: IProps) => {
                     <Descriptions.Item label="Loss">$50</Descriptions.Item>
                     <Descriptions.Item label="Covered">$30</Descriptions.Item>
                   </Descriptions>
-                  <div>
-                    <Button key={"button"} type={"primary"}>
-                      Claim
-                    </Button>
-                  </div>
+                  <Button key={"button"} type={"primary"}>
+                    Claim
+                  </Button>
                 </Space>
               </Card>
             </Col>

@@ -18,18 +18,22 @@
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
     "antd": "^5.5.2",
+    "bs58": "^5.0.0",
     "classnames": "^2.3.2",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "next": "13.4.4",
+    "next-auth": "^4.22.1",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
     "react-ionicons": "^4.2.0",
     "sass": "^1.62.1",
     "styled-components": "^5.3.11",
-    "typescript": "5.0.4"
+    "tweetnacl": "^1.0.3",
+    "typescript": "5.0.4",
+    "uuid": "^9.0.0"
   }
 }

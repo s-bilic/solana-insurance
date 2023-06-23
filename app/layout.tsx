@@ -1,4 +1,5 @@
 import "./styles/globals.scss";
+import Provider from "./components/provider/provider";
 import styles from "./styles/layout.module.scss";
 import React from "react";
 import { Inter } from "next/font/google";
@@ -26,14 +27,13 @@ export default function RootLayout({
       <body className={inter.className}>
         <ConfigProvider
           theme={{
-            token: {
-              colorPrimary: "#00ff93",
-              colorTextLightSolid: "#000",
-            },
+            token: {},
           }}
         >
           <div className={styles.container}>
-            <Wallet>{children}</Wallet>
+            <Wallet>
+              <Provider>{children}</Provider>
+            </Wallet>
           </div>
         </ConfigProvider>
       </body>
