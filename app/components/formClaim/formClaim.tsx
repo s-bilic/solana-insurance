@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import classNames from "classnames/bind";
 import styles from "./FormClaim.module.scss";
 import {
@@ -19,17 +20,40 @@ interface IProps {
   className?: string;
 }
 
-const FormClaim = ({ className }: IProps) => {
+const FormClaim = ({ className, submitted }: IProps) => {
+  const formRef = React.createRef();
+  const [form] = Form.useForm();
+  const [submittedClaim, setSubmittedClaim] = useState(false);
+  const { data: session } = useSession();
   const classes = cx(
     {
       formClaim: true,
     },
     className
   );
-
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = async (values: any) => {
+    form.resetFields();
+    const body = {
+      date: values?.date,
+      subject: values?.subject,
+      description: values?.description,
+      value: values?.cost,
+      address: session?.publicKey,
+    };
+    console.log(body, "xd");
+    await fetch("/api/claim", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    setSubmittedClaim(true);
+    formRef?.current.resetFields();
   };
+
+  useEffect(() => {
+    if (submitted) {
+      submitted(submittedClaim);
+    }
+  }, [submittedClaim]);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -46,6 +70,8 @@ const FormClaim = ({ className }: IProps) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        onChange={() => setSubmittedClaim(false)}
+        ref={formRef}
       >
         <Form.Item
           label="Date"

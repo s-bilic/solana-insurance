@@ -14,7 +14,6 @@ import { useEffect } from "react";
 const SignIn = () => {
   const { data: session, status } = useSession();
 
-  console.log(session);
   const wallet = useWallet();
   const walletModal = useWalletModal();
 
@@ -53,6 +52,22 @@ const SignIn = () => {
       handleSignIn();
     }
   }, [wallet.connected]);
+
+  const createUser = async () => {
+    const body = {
+      address: session?.publicKey,
+    };
+    await fetch("/api/user", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+  };
+
+  useEffect(() => {
+    if (session) {
+      createUser();
+    }
+  }, [session]);
 
   return (
     <div>
