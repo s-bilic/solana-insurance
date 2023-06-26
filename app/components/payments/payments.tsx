@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
 import classNames from "classnames/bind";
 import styles from "./payments.module.scss";
 import { Space, Table, Tag, Button } from "antd";
@@ -13,10 +14,10 @@ interface IProps {
 }
 
 const Payments = ({ className }: IProps) => {
-  const { init, confirmed, processing } = SendSolana();
+  const { data: session } = useSession();
+  const amount = 0.01;
+  const { init, confirmed, signature } = SendSolana();
 
-  console.log(confirmed, "c");
-  console.log(processing, "p");
   const classes = cx(
     {
       payments: true,
@@ -31,6 +32,37 @@ const Payments = ({ className }: IProps) => {
     amount: number;
     status: string[];
   }
+
+  const handlePayment = (amount: any) => {
+    init(amount);
+  };
+
+  console;
+
+  const createPayment = async () => {
+    if (session && signature) {
+      const body = {
+        date: new Date(),
+        transaction: signature,
+        amount: amount,
+        completed: true,
+        status: "confirmed",
+        address: session?.publicKey,
+      };
+
+      await fetch("/api/payment", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (confirmed) {
+      createPayment();
+      console.log("paid");
+    }
+  }, [confirmed]);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -75,7 +107,7 @@ const Payments = ({ className }: IProps) => {
       render: (_, record) => (
         <Space size="middle">
           <Button
-            onClick={() => init(0.1)}
+            onClick={() => handlePayment(0.01)}
             disabled={record?.status[0] === "paid" || confirmed}
             type={"primary"}
           >

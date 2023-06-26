@@ -14,11 +14,14 @@ const SendSolana = () => {
   const { publicKey, sendTransaction } = useWallet();
   const [confirmed, setConfirmed] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [signature, setSignature] = useState("");
 
   const init = useCallback(
     async (amount: number) => {
       setProcessing(true);
       setConfirmed(false);
+      setSignature("");
+
       if (!publicKey) throw new WalletNotConnectedError();
 
       const transaction = new Transaction().add(
@@ -45,11 +48,12 @@ const SendSolana = () => {
       });
       setProcessing(false);
       setConfirmed(true);
+      setSignature(signature);
     },
     [publicKey, sendTransaction, connection]
   );
 
-  return { init, confirmed, processing };
+  return { init, confirmed, processing, signature };
 };
 
 export default SendSolana;

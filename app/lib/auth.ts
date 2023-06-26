@@ -2,7 +2,6 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
 import { SigninMessage } from "../utils/signInMessage";
-import { PrismaClient } from "@prisma/client";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",

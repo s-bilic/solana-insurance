@@ -33,10 +33,11 @@ const Claims = ({ className, items, addedClaim }: IProps) => {
       setClaims(data);
     }
   };
+  console.log(session);
 
   useEffect(() => {
     fetchClaims();
-  }, [addedClaim]);
+  }, [addedClaim, session]);
 
   return (
     <div className={classes}>
