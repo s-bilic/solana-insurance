@@ -27,10 +27,13 @@ export async function GET(
   { params }: any,
   res: NextApiResponse<any>
 ) {
+  const { searchParams } = new URL(req.url);
+
+  const address = searchParams.get("address");
   const data = await prisma.claim.findMany({
     where: {
       user: {
-        address: params?.address as string,
+        address: address as string,
       },
     },
   });

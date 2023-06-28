@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import classNames from "classnames/bind";
 import styles from "./payments.module.scss";
@@ -13,7 +13,8 @@ interface IProps {
   className?: string;
 }
 
-const Payments = ({ className }: IProps) => {
+const Payments = ({ className, paymentStatus }: IProps) => {
+  const [payments, setPayments] = useState([]);
   const { data: session } = useSession();
   const amount = 0.01;
   const { init, confirmed, signature } = SendSolana();
@@ -37,8 +38,6 @@ const Payments = ({ className }: IProps) => {
     init(amount);
   };
 
-  console;
-
   const createPayment = async () => {
     if (session && signature) {
       const body = {
@@ -46,7 +45,6 @@ const Payments = ({ className }: IProps) => {
         transaction: signature,
         amount: amount,
         completed: true,
-        status: "confirmed",
         address: session?.publicKey,
       };
 
@@ -54,6 +52,9 @@ const Payments = ({ className }: IProps) => {
         method: "POST",
         body: JSON.stringify(body),
       });
+
+      // Fetch payments after the payment is created
+      fetchPayments();
     }
   };
 
@@ -64,22 +65,58 @@ const Payments = ({ className }: IProps) => {
     }
   }, [confirmed]);
 
+  const fetchPayments = async () => {
+    if (session) {
+      const response = await fetch(
+        `/api/payment?address=${session?.publicKey}`
+      );
+
+      const data = await response.json();
+
+      setPayments(data);
+
+      if (paymentStatus) {
+        paymentStatus(data);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchPayments();
+  }, [session]);
+
   const columns: ColumnsType<DataType> = [
     {
       title: "Date",
       dataIndex: "date",
       key: "date",
+      width: "10%",
     },
     {
       title: "Transaction",
       dataIndex: "transaction",
       key: "transaction",
-      render: (text) => <a>{text}</a>,
+      render: (text) => (
+        <div
+          style={{
+            width: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "40ch",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <a href={`https://solana.fm/tx/${text}?cluster=devnet-solana`}>
+            {text}
+          </a>
+        </div>
+      ),
     },
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+      width: "10%",
     },
     {
       title: "Status",
@@ -87,9 +124,9 @@ const Payments = ({ className }: IProps) => {
       dataIndex: "tags",
       render: (_, { status }) => (
         <>
-          {status.map((tag) => {
+          {status?.map((tag) => {
             let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "awaiting payment") {
+            if (tag === "awaiting") {
               color = "volcano";
             }
             return (
@@ -100,6 +137,7 @@ const Payments = ({ className }: IProps) => {
           })}
         </>
       ),
+      width: "10%",
     },
     {
       title: "Action",
@@ -115,25 +153,16 @@ const Payments = ({ className }: IProps) => {
           </Button>
         </Space>
       ),
+      width: "10%",
     },
   ];
 
-  const data: DataType[] = [
-    {
-      key: "1",
-      date: "1 feb 2023",
-      transaction: "7cGbp2VjNiGiM1VFXMrfZ7S5NwWSF91FfFhu1dQBSXb1",
-      amount: 32,
-      status: ["paid"],
-    },
-    {
-      key: "1",
-      date: "1 mar 2023",
-      transaction: "-",
-      amount: 32,
-      status: ["awaiting payment"],
-    },
-  ];
+  const data: DataType[] = payments?.map((item, index) => ({
+    ...item,
+    key: index,
+    date: new Date(item?.date).toLocaleDateString(),
+    status: item?.completed ? ["paid"] : ["awaiting"],
+  }));
 
   return (
     <div className={classes}>

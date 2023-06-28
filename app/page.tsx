@@ -6,7 +6,7 @@ export default async function Home() {
   return (
     <main className={styles.main}>
       <Heading />
-      <Tabs claimsData={[]} />
+      <Tabs />
     </main>
   );
 }

@@ -1,12 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Tabs, TabsProps } from "../../lib/antd";
+import { Tabs, TabsProps, Alert } from "../../lib/antd";
 import Payments from "../payments/payments";
 import Claims from "../claims/claims";
 import FormClaim from "../formClaim/formClaim";
+import { useSession } from "next-auth/react";
 
-const CustomTabs = ({ claimsData }) => {
+const CustomTabs = () => {
+  const { data: session } = useSession();
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState();
 
   const items: TabsProps["items"] = [
     {
@@ -14,14 +17,14 @@ const CustomTabs = ({ claimsData }) => {
       label: `Overview`,
       children: (
         <div>
-          <Claims items={claimsData} addedClaim={submitted} />
+          <Claims addedClaim={submitted} />
         </div>
       ),
     },
     {
       key: "2",
       label: `Payments`,
-      children: <Payments />,
+      children: <Payments paymentStatus={(e) => setStatus(e)} />,
     },
     {
       key: "3",
@@ -34,15 +37,27 @@ const CustomTabs = ({ claimsData }) => {
     if (submitted) {
       setSubmitted(false);
     }
-    console.log(submitted);
   }, [submitted]);
 
+  const completedPayment = status?.find((item) => item.completed === true);
+
   return (
-    <Tabs
-      defaultActiveKey={"1"}
-      activeKey={submitted ? "1" : undefined}
-      items={items}
-    />
+    <>
+      <Tabs
+        defaultActiveKey={"1"}
+        activeKey={submitted ? "1" : undefined}
+        items={items}
+      />
+      {!completedPayment && (
+        <Alert
+          message="Uncompleted payment"
+          description="In order to submit claims, make your payment complete"
+          type="warning"
+          showIcon
+          closable
+        />
+      )}
+    </>
   );
 };
 

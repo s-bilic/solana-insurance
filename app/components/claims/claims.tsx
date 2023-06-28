@@ -10,11 +10,10 @@ const cx = classNames.bind(styles);
 interface IProps {
   className?: string;
   title?: string;
-  items?: any;
 }
 
-const Claims = ({ className, items, addedClaim }: IProps) => {
-  const [claims, setClaims] = useState(items);
+const Claims = ({ className, addedClaim }: IProps) => {
+  const [claims, setClaims] = useState([]);
   const { data: session } = useSession();
   const classes = cx(
     {
@@ -33,7 +32,6 @@ const Claims = ({ className, items, addedClaim }: IProps) => {
       setClaims(data);
     }
   };
-  console.log(session);
 
   useEffect(() => {
     fetchClaims();
