@@ -2,6 +2,9 @@
   "name": "insurance-solana",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -46,6 +49,7 @@
   },
   "devDependencies": {
     "dotenv-cli": "^7.2.1",
-    "prisma": "^4.16.1"
+    "prisma": "^4.16.1",
+    "ts-node": "^10.9.1"
   }
 }

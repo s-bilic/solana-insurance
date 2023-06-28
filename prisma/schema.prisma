@@ -25,8 +25,8 @@ model Claim {
   subject     String
   description String
   value       Float
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  userAddress String
+  user        User     @relation(fields: [userAddress], references: [address])
 }
 
 model Payment {
@@ -34,8 +34,7 @@ model Payment {
   date        DateTime
   transaction String
   amount      Float
-  status      String
   completed   Boolean
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  userAddress String
+  user        User     @relation(fields: [userAddress], references: [address])
 }
