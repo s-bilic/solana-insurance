@@ -106,7 +106,10 @@ const Payments = ({ className, paymentStatus }: IProps) => {
             whiteSpace: "nowrap",
           }}
         >
-          <a href={`https://solana.fm/tx/${text}?cluster=devnet-solana`}>
+          <a
+            href={`https://solana.fm/tx/${text}?cluster=devnet-solana`}
+            target={"_blank"}
+          >
             {text}
           </a>
         </div>

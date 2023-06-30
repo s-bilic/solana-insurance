@@ -19,7 +19,9 @@
     "production:build": "npx prisma generate && npx prisma migrate deploy && next build"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.28.1-beta.1",
     "@prisma/client": "^4.16.1",
+    "@solana/spl-token": "^0.3.8",
     "@solana/wallet-adapter-base": "^0.9.22",
     "@solana/wallet-adapter-react": "^0.15.32",
     "@solana/wallet-adapter-react-ui": "^0.9.31",

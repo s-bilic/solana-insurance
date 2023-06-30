@@ -5,6 +5,7 @@ import Payments from "../payments/payments";
 import Claims from "../claims/claims";
 import FormClaim from "../formClaim/formClaim";
 import { useSession } from "next-auth/react";
+import { Keypair } from "@solana/web3.js";
 
 const CustomTabs = () => {
   const { data: session } = useSession();
@@ -41,6 +42,13 @@ const CustomTabs = () => {
 
   const completedPayment = status?.find((item) => item.completed === true);
 
+  // let account = Keypair.generate();
+
+  // console.log(account.publicKey.toBase58());
+  // console.log(account.secretKey);
+
+  // let array = Array.from(account.secretKey);
+  // console.log(array);
   return (
     <>
       <Tabs

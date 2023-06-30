@@ -5,6 +5,7 @@ import classNames from "classnames/bind";
 import styles from "./claims.module.scss";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Card, Button, Row, Col, Space, Descriptions, Tag } from "antd";
+import ReceiveSolana from "../../utils/receiveSolana";
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -15,6 +16,7 @@ interface IProps {
 const Claims = ({ className, addedClaim }: IProps) => {
   const [claims, setClaims] = useState([]);
   const { data: session } = useSession();
+  const { init, processing, confirmed, signature } = ReceiveSolana();
   const classes = cx(
     {
       claims: true,
@@ -40,7 +42,6 @@ const Claims = ({ className, addedClaim }: IProps) => {
   return (
     <div className={classes}>
       <h6 className={styles.title}>{`Open claims (${claims?.length})`}</h6>
-
       <div className={styles.items}>
         <Row gutter={[24, 24]}>
           {claims?.map((item, index) => {
