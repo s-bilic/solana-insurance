@@ -5,7 +5,6 @@ import classNames from "classnames/bind";
 import styles from "./claims.module.scss";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Card, Button, Row, Col, Space, Descriptions, Tag } from "antd";
-import ReceiveSolana from "../../utils/receiveSolana";
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -15,14 +14,19 @@ interface IProps {
 
 const Claims = ({ className, addedClaim }: IProps) => {
   const [claims, setClaims] = useState([]);
+  const [processing, setProcessing] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   const { data: session } = useSession();
-  const { init, processing, confirmed, signature } = ReceiveSolana();
+
   const classes = cx(
     {
       claims: true,
     },
     className
   );
+
+  console.log(processing, "p");
+  console.log(confirmed, "c");
 
   const fetchClaims = async () => {
     if (session) {
@@ -35,9 +39,31 @@ const Claims = ({ className, addedClaim }: IProps) => {
     }
   };
 
+  const receiveSolana = async (claimId) => {
+    setProcessing(true);
+    setConfirmed(false);
+    if (session) {
+      const body = {
+        address: session?.publicKey,
+        claimId: claimId,
+      };
+      const response = await fetch("/api/receive", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+      setProcessing(false);
+      setConfirmed(true);
+      fetchClaims();
+      console.log(data);
+    }
+  };
+
   useEffect(() => {
     fetchClaims();
   }, [addedClaim, session]);
+  console.log(claims);
 
   return (
     <div className={classes}>
@@ -72,7 +98,12 @@ const Claims = ({ className, addedClaim }: IProps) => {
                       </Descriptions.Item>
                       <Descriptions.Item label="Covered">$30</Descriptions.Item>
                     </Descriptions>
-                    <Button key={"button"} type={"primary"}>
+                    <Button
+                      disabled={item?.completed}
+                      onClick={() => receiveSolana(item?.id)}
+                      key={"button"}
+                      type={"primary"}
+                    >
                       Claim
                     </Button>
                   </Space>

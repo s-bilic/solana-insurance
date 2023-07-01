@@ -31,7 +31,6 @@ const SendSolana = () => {
           lamports: amount * LAMPORTS_PER_SOL,
         })
       );
-
       const {
         context: { slot: minContextSlot },
         value: { blockhash, lastValidBlockHeight },

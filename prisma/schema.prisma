@@ -25,6 +25,7 @@ model Claim {
   subject     String
   description String
   value       Float
+  completed   Boolean
   userAddress String
   user        User     @relation(fields: [userAddress], references: [address])
 }

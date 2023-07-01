@@ -38,6 +38,7 @@ const FormClaim = ({ className, submitted }: IProps) => {
       subject: values?.subject,
       description: values?.description,
       value: values?.cost,
+      completed: false,
       address: session?.publicKey,
     };
     console.log(body, "xd");

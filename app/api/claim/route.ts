@@ -3,7 +3,8 @@ import { prisma } from "../../lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { date, subject, description, value, address } = await req.json();
+  const { date, subject, description, completed, value, address } =
+    await req.json();
 
   const data = await prisma.claim.create({
     data: {
@@ -11,6 +12,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       subject,
       description,
       value,
+      completed,
       user: {
         connect: {
           address,
