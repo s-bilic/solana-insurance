@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import { useAtom, atom } from "jotai";
-import { claimsAtom, submittedClaimAtom } from "../../utils/atom";
+import { submittedClaimAtom } from "../../utils/atom";
 import classNames from "classnames/bind";
 import styles from "./claims.module.scss";
 import { CheckCircleOutlined } from "@ant-design/icons";
@@ -54,8 +54,10 @@ const Claims = ({ className }: IProps) => {
       });
 
       const data = await response.json();
+
       setProcessing(false);
       setConfirmed(true);
+
       fetchClaims();
     }
   };

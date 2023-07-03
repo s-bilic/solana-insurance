@@ -1,5 +1,5 @@
 import "./styles/globals.scss";
-import Provider from "./components/provider/provider";
+import ProviderAuth from "./components/provider/provider";
 import styles from "./styles/layout.module.scss";
 import React from "react";
 import { Inter } from "next/font/google";
@@ -32,7 +32,7 @@ export default function RootLayout({
         >
           <div className={styles.container}>
             <Wallet>
-              <Provider>{children}</Provider>
+              <ProviderAuth>{children}</ProviderAuth>
             </Wallet>
           </div>
         </ConfigProvider>

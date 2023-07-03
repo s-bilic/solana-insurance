@@ -22,14 +22,12 @@ interface IProps {
   className?: string;
 }
 
-const FormClaim = ({ className, submitted }: IProps) => {
-  // const [claims, setClaims] = useAtom(claimsAtom);
+const FormClaim = ({ className }: IProps) => {
   const [submittedClaim, setSubmittedClaim] = useAtom(submittedClaimAtom);
-
   const formRef = React.createRef();
   const [form] = Form.useForm();
-  // const [submittedClaim, setSubmittedClaim] = useState(false);
   const { data: session } = useSession();
+
   const classes = cx(
     {
       formClaim: true,
@@ -57,12 +55,6 @@ const FormClaim = ({ className, submitted }: IProps) => {
 
     formRef?.current.resetFields();
   };
-
-  useEffect(() => {
-    if (submitted) {
-      submitted(submittedClaim);
-    }
-  }, [submittedClaim]);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);

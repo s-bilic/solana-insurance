@@ -13,15 +13,14 @@ const cx = classNames.bind(styles);
 
 interface IProps {
   className?: string;
+  data?: [];
 }
 
-const Payments = ({ className }: IProps) => {
-  const [payments] = useAtom(paymentsAtom);
+const Payments = ({ className, data }: IProps) => {
   const [submittedPayment, setSubmittedPayment] = useAtom(submittedPaymentAtom);
-  // const [completedPayment, setCompletedPayment] = useAtom(completedPaymentAtom);
   const { data: session } = useSession();
-  const amount = 0.01;
   const { init, confirmed, signature } = SendSolana();
+  const amount = 0.01;
 
   const classes = cx(
     {
@@ -143,7 +142,7 @@ const Payments = ({ className }: IProps) => {
     },
   ];
 
-  const data: DataType[] = payments?.map((item, index) => ({
+  const rows: DataType[] = data?.map((item, index) => ({
     ...item,
     key: index,
     date: new Date(item?.date).toLocaleDateString(),
@@ -152,7 +151,7 @@ const Payments = ({ className }: IProps) => {
 
   return (
     <div className={classes}>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={rows} />
     </div>
   );
 };

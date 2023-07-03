@@ -5,20 +5,16 @@ import Payments from "../payments/payments";
 import Claims from "../claims/claims";
 import FormClaim from "../formClaim/formClaim";
 import { useSession } from "next-auth/react";
-import { Keypair } from "@solana/web3.js";
 import { useAtom } from "jotai";
-import {
-  submittedClaimAtom,
-  paymentsAtom,
-  submittedPaymentAtom,
-} from "../../utils/atom";
+import { submittedClaimAtom, submittedPaymentAtom } from "../../utils/atom";
 
 const CustomTabs = () => {
   const { data: session } = useSession();
   const [submittedClaim, setSubmittedClaim] = useAtom(submittedClaimAtom);
-  const [payments, setPayments] = useAtom(paymentsAtom);
+  const [submittedPayment] = useAtom(submittedPaymentAtom);
+
+  const [payments, setPayments] = useState([]);
   const [completedPayment, setCompletedPayment] = useState(true);
-  const [submittedPayment, setSubmittedPayment] = useAtom(submittedPaymentAtom);
 
   const items: TabsProps["items"] = [
     {
@@ -33,13 +29,13 @@ const CustomTabs = () => {
     {
       key: "2",
       label: `Payments`,
-      children: <Payments />,
+      children: <Payments data={payments} />,
     },
     {
       key: "3",
       label: `Submit claim`,
       disabled: !completedPayment,
-      children: <FormClaim submitted={(e) => setSubmittedClaim(e)} />,
+      children: <FormClaim />,
     },
   ];
 
@@ -49,14 +45,13 @@ const CustomTabs = () => {
 
   const fetchPayments = async () => {
     if (session) {
-      setTimeout(async () => {
-        const response = await fetch(
-          `/api/payment?address=${session?.publicKey}`
-        );
-        const data = await response.json();
-        setPayments(data);
-        setCompletedPayment(data?.find((item) => item?.completed === true));
-      }, 2000);
+      const response = await fetch(
+        `/api/payment?address=${session?.publicKey}`
+      );
+      const data = await response.json();
+
+      setPayments(data);
+      setCompletedPayment(data?.find((item) => item?.completed === true));
     }
   };
 
@@ -64,7 +59,6 @@ const CustomTabs = () => {
     fetchPayments();
   }, [session, submittedPayment]);
 
-  console.log(completedPayment);
   return (
     <>
       <Tabs

@@ -2,6 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
 import { SigninMessage } from "../utils/signInMessage";
+import { prisma } from "./prisma";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -41,6 +42,43 @@ export const authOptions: NextAuthOptions = {
 
           if (!validationResult)
             throw new Error("Could not validate the signed message");
+
+          // Create user
+
+          const data = await prisma.user.upsert({
+            where: { address: signinMessage.publicKey },
+            create: { address: signinMessage.publicKey },
+            update: {},
+          });
+          console.log(data);
+          // Check if user with payments data already exists
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              address: signinMessage.publicKey,
+            },
+            include: {
+              payments: true,
+            },
+          });
+
+          // Create the default payments data set for each user.
+          if (!existingUser || existingUser.payments.length === 0) {
+            const defaultPayment = await prisma.payment.create({
+              data: {
+                date: new Date(),
+                transaction: "-",
+                amount: 0.01,
+                completed: false,
+                user: {
+                  connect: {
+                    address: signinMessage.publicKey,
+                  },
+                },
+              },
+            });
+
+            console.log("Default payment created:", defaultPayment);
+          }
 
           return {
             id: signinMessage.publicKey,

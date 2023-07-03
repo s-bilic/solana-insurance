@@ -53,22 +53,6 @@ const SignIn = () => {
     }
   }, [wallet.connected]);
 
-  const createUser = async () => {
-    const body = {
-      address: session?.publicKey,
-    };
-    await fetch("/api/user", {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
-  };
-
-  useEffect(() => {
-    if (session) {
-      createUser();
-    }
-  }, [session]);
-
   return (
     <div>
       {!session && <WalletMultiButton />}
