@@ -5,6 +5,8 @@ import React from "react";
 import { Inter } from "next/font/google";
 import dynamic from "next/dynamic";
 import { ConfigProvider } from "./lib/antd";
+import ToastProvider from "./components/toastProvider/toastProvider";
+import "react-toastify/dist/ReactToastify.css";
 
 const Wallet = dynamic(() => import("./components/wallet/wallet"), {
   ssr: false,
@@ -30,11 +32,13 @@ export default function RootLayout({
             token: {},
           }}
         >
-          <div className={styles.container}>
-            <Wallet>
-              <ProviderAuth>{children}</ProviderAuth>
-            </Wallet>
-          </div>
+          <ToastProvider>
+            <div className={styles.container}>
+              <Wallet>
+                <ProviderAuth>{children}</ProviderAuth>
+              </Wallet>
+            </div>
+          </ToastProvider>
         </ConfigProvider>
       </body>
     </html>

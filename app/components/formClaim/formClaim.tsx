@@ -16,6 +16,8 @@ import {
   Select,
   InputNumber,
 } from "antd";
+import { toast } from "react-toastify";
+
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -47,10 +49,18 @@ const FormClaim = ({ className }: IProps) => {
       address: session?.publicKey,
     };
     console.log(body, "xd");
-    await fetch("/api/claim", {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
+
+    await toast.promise(
+      fetch("/api/claim", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+      {
+        success: "New claim created",
+        pending: "Processing...",
+        error: "Something went wrong",
+      }
+    );
     setSubmittedClaim(true);
 
     formRef?.current.resetFields();

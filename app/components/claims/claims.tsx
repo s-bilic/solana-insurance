@@ -7,6 +7,7 @@ import classNames from "classnames/bind";
 import styles from "./claims.module.scss";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Card, Button, Row, Col, Space, Descriptions, Tag } from "antd";
+import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
@@ -48,10 +49,17 @@ const Claims = ({ className }: IProps) => {
         address: session?.publicKey,
         claimId: claimId,
       };
-      const response = await fetch("/api/receive", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+      const response = await toast.promise(
+        fetch("/api/receive", {
+          method: "POST",
+          body: JSON.stringify(body),
+        }),
+        {
+          success: "Claimed succesfully",
+          pending: "Processing...",
+          error: "Something went wrong",
+        }
+      );
 
       const data = await response.json();
 

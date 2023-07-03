@@ -8,7 +8,8 @@ import { Space, Table, Tag, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import SendSolana from "app/utils/sendSolana";
 import { useAtom } from "jotai";
-import { paymentsAtom, submittedPaymentAtom } from "../../utils/atom";
+import { submittedPaymentAtom } from "../../utils/atom";
+import { toast } from "react-toastify";
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -51,10 +52,17 @@ const Payments = ({ className, data }: IProps) => {
         address: session?.publicKey,
       };
 
-      await fetch("/api/payment", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+      await toast.promise(
+        fetch("/api/payment", {
+          method: "POST",
+          body: JSON.stringify(body),
+        }),
+        {
+          success: "Payment received",
+          pending: "Processing...",
+          error: "Something went wrong",
+        }
+      );
 
       setSubmittedPayment(true);
     }
