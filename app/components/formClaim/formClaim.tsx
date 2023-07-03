@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { submittedClaimAtom } from "../../utils/atom";
 import { useSession } from "next-auth/react";
 import classNames from "classnames/bind";
 import styles from "./FormClaim.module.scss";
@@ -21,9 +23,12 @@ interface IProps {
 }
 
 const FormClaim = ({ className, submitted }: IProps) => {
+  // const [claims, setClaims] = useAtom(claimsAtom);
+  const [submittedClaim, setSubmittedClaim] = useAtom(submittedClaimAtom);
+
   const formRef = React.createRef();
   const [form] = Form.useForm();
-  const [submittedClaim, setSubmittedClaim] = useState(false);
+  // const [submittedClaim, setSubmittedClaim] = useState(false);
   const { data: session } = useSession();
   const classes = cx(
     {
@@ -32,6 +37,8 @@ const FormClaim = ({ className, submitted }: IProps) => {
     className
   );
   const onFinish = async (values: any) => {
+    setSubmittedClaim(false);
+
     form.resetFields();
     const body = {
       date: values?.date,
@@ -47,6 +54,7 @@ const FormClaim = ({ className, submitted }: IProps) => {
       body: JSON.stringify(body),
     });
     setSubmittedClaim(true);
+
     formRef?.current.resetFields();
   };
 

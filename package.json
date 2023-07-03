@@ -37,6 +37,7 @@
     "eslint-config-next": "13.4.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "jotai": "^2.2.1",
     "next": "13.4.4",
     "next-auth": "^4.22.1",
     "prettier": "^2.8.8",

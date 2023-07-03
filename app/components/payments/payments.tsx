@@ -7,14 +7,18 @@ import styles from "./payments.module.scss";
 import { Space, Table, Tag, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import SendSolana from "app/utils/sendSolana";
+import { useAtom } from "jotai";
+import { paymentsAtom, submittedPaymentAtom } from "../../utils/atom";
 const cx = classNames.bind(styles);
 
 interface IProps {
   className?: string;
 }
 
-const Payments = ({ className, paymentStatus }: IProps) => {
-  const [payments, setPayments] = useState([]);
+const Payments = ({ className }: IProps) => {
+  const [payments] = useAtom(paymentsAtom);
+  const [submittedPayment, setSubmittedPayment] = useAtom(submittedPaymentAtom);
+  // const [completedPayment, setCompletedPayment] = useAtom(completedPaymentAtom);
   const { data: session } = useSession();
   const amount = 0.01;
   const { init, confirmed, signature } = SendSolana();
@@ -53,8 +57,7 @@ const Payments = ({ className, paymentStatus }: IProps) => {
         body: JSON.stringify(body),
       });
 
-      // Fetch payments after the payment is created
-      fetchPayments();
+      setSubmittedPayment(true);
     }
   };
 
@@ -63,27 +66,7 @@ const Payments = ({ className, paymentStatus }: IProps) => {
       createPayment();
       console.log("paid");
     }
-  }, [confirmed]);
-
-  const fetchPayments = async () => {
-    if (session) {
-      const response = await fetch(
-        `/api/payment?address=${session?.publicKey}`
-      );
-
-      const data = await response.json();
-
-      setPayments(data);
-
-      if (paymentStatus) {
-        paymentStatus(data);
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetchPayments();
-  }, [session]);
+  }, [confirmed, session]);
 
   const columns: ColumnsType<DataType> = [
     {

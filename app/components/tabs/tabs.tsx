@@ -6,11 +6,19 @@ import Claims from "../claims/claims";
 import FormClaim from "../formClaim/formClaim";
 import { useSession } from "next-auth/react";
 import { Keypair } from "@solana/web3.js";
+import { useAtom } from "jotai";
+import {
+  submittedClaimAtom,
+  paymentsAtom,
+  submittedPaymentAtom,
+} from "../../utils/atom";
 
 const CustomTabs = () => {
   const { data: session } = useSession();
-  const [submitted, setSubmitted] = useState(false);
-  const [status, setStatus] = useState();
+  const [submittedClaim, setSubmittedClaim] = useAtom(submittedClaimAtom);
+  const [payments, setPayments] = useAtom(paymentsAtom);
+  const [completedPayment, setCompletedPayment] = useState(true);
+  const [submittedPayment, setSubmittedPayment] = useAtom(submittedPaymentAtom);
 
   const items: TabsProps["items"] = [
     {
@@ -18,45 +26,53 @@ const CustomTabs = () => {
       label: `Overview`,
       children: (
         <div>
-          <Claims addedClaim={submitted} />
+          <Claims />
         </div>
       ),
     },
     {
       key: "2",
       label: `Payments`,
-      children: <Payments paymentStatus={(e) => setStatus(e)} />,
+      children: <Payments />,
     },
     {
       key: "3",
       label: `Submit claim`,
-      children: <FormClaim submitted={(e) => setSubmitted(e)} />,
+      disabled: !completedPayment,
+      children: <FormClaim submitted={(e) => setSubmittedClaim(e)} />,
     },
   ];
 
   useEffect(() => {
-    if (submitted) {
-      setSubmitted(false);
+    setSubmittedClaim(false);
+  }, [submittedClaim]);
+
+  const fetchPayments = async () => {
+    if (session) {
+      setTimeout(async () => {
+        const response = await fetch(
+          `/api/payment?address=${session?.publicKey}`
+        );
+        const data = await response.json();
+        setPayments(data);
+        setCompletedPayment(data?.find((item) => item?.completed === true));
+      }, 2000);
     }
-  }, [submitted]);
+  };
 
-  const completedPayment = status?.find((item) => item.completed === true);
+  useEffect(() => {
+    fetchPayments();
+  }, [session, submittedPayment]);
 
-  // let account = Keypair.generate();
-
-  // console.log(account.publicKey.toBase58());
-  // console.log(account.secretKey);
-
-  // let array = Array.from(account.secretKey);
-  // console.log(array);
+  console.log(completedPayment);
   return (
     <>
       <Tabs
         defaultActiveKey={"1"}
-        activeKey={submitted ? "1" : undefined}
+        activeKey={submittedClaim ? "1" : undefined}
         items={items}
       />
-      {!completedPayment && (
+      {!completedPayment && session && (
         <Alert
           message="Uncompleted payment"
           description="In order to submit claims, make your payment complete"

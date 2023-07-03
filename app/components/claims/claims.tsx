@@ -1,10 +1,13 @@
 "use client";
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
+import { useAtom, atom } from "jotai";
+import { claimsAtom, submittedClaimAtom } from "../../utils/atom";
 import classNames from "classnames/bind";
 import styles from "./claims.module.scss";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Card, Button, Row, Col, Space, Descriptions, Tag } from "antd";
+
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -12,7 +15,8 @@ interface IProps {
   title?: string;
 }
 
-const Claims = ({ className, addedClaim }: IProps) => {
+const Claims = ({ className }: IProps) => {
+  const [submittedClaim] = useAtom(submittedClaimAtom);
   const [claims, setClaims] = useState([]);
   const [processing, setProcessing] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -24,9 +28,6 @@ const Claims = ({ className, addedClaim }: IProps) => {
     },
     className
   );
-
-  console.log(processing, "p");
-  console.log(confirmed, "c");
 
   const fetchClaims = async () => {
     if (session) {
@@ -56,14 +57,12 @@ const Claims = ({ className, addedClaim }: IProps) => {
       setProcessing(false);
       setConfirmed(true);
       fetchClaims();
-      console.log(data);
     }
   };
 
   useEffect(() => {
     fetchClaims();
-  }, [addedClaim, session]);
-  console.log(claims);
+  }, [session, submittedClaim]);
 
   return (
     <div className={classes}>
