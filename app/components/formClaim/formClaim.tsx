@@ -99,11 +99,11 @@ const FormClaim = ({ className }: IProps) => {
           <Select
             placeholder={"Select a value"}
             options={[
-              { value: "theft", label: "Burglary and Theft" },
-              { value: "wind", label: "Wind and Hail Damage" },
-              { value: "fire", label: "Fire Damage" },
+              { value: "Burglary and Theft", label: "Burglary and Theft" },
+              { value: "Wind and Hail Damage", label: "Wind and Hail Damage" },
+              { value: "Fire Damage", label: "Fire Damage" },
               {
-                value: "customer",
+                value: "Customer Injury and Property Damage",
                 label: "Customer Injury and Property Damage",
               },
             ]}

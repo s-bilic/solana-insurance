@@ -61,6 +61,9 @@ const Payments = ({ className, data }: IProps) => {
           success: "Payment received",
           pending: "Processing...",
           error: "Something went wrong",
+        },
+        {
+          toastId: "hi",
         }
       );
 
@@ -73,7 +76,7 @@ const Payments = ({ className, data }: IProps) => {
       createPayment();
       console.log("paid");
     }
-  }, [confirmed, session]);
+  }, [confirmed]);
 
   const columns: ColumnsType<DataType> = [
     {

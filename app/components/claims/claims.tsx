@@ -100,12 +100,14 @@ const Claims = ({ className }: IProps) => {
                     style={{ display: "flex" }}
                   >
                     {item.description}
-                    {formattedDate && formattedDate.toLocaleString()}
-                    <Descriptions>
+                    <Descriptions size="small">
                       <Descriptions.Item label="Loss">
                         {item?.value}
                       </Descriptions.Item>
                       <Descriptions.Item label="Covered">$30</Descriptions.Item>
+                      <Descriptions.Item label="Date">
+                        {formattedDate && formattedDate.toLocaleDateString()}
+                      </Descriptions.Item>
                     </Descriptions>
                     <Button
                       disabled={item?.completed}

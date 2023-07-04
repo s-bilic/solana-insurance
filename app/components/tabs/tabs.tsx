@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Tabs, TabsProps, Alert } from "../../lib/antd";
+import { Tabs, TabsProps, Alert, Empty, Button, Tooltip } from "../../lib/antd";
 import Payments from "../payments/payments";
 import Claims from "../claims/claims";
 import FormClaim from "../formClaim/formClaim";
@@ -20,21 +20,44 @@ const CustomTabs = () => {
     {
       key: "1",
       label: `Overview`,
+      disabled: !session,
       children: (
         <div>
-          <Claims />
+          {!session ? (
+            <Empty
+              description={"Connect your wallet to enable all features"}
+              style={{
+                border: "dashed 1px #c5c5c5",
+                borderRadius: 8,
+                padding: 40,
+              }}
+            >
+              <Tooltip title="Don't have a wallet yet?">
+                <Button
+                  href="https://phantom.app/"
+                  type="primary"
+                  target={"_blank"}
+                >
+                  Download Wallet
+                </Button>
+              </Tooltip>
+            </Empty>
+          ) : (
+            <Claims />
+          )}
         </div>
       ),
     },
     {
       key: "2",
       label: `Payments`,
+      disabled: !session,
       children: <Payments data={payments} />,
     },
     {
       key: "3",
       label: `Submit claim`,
-      disabled: !completedPayment,
+      disabled: !completedPayment || !session,
       children: <FormClaim />,
     },
   ];

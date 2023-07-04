@@ -4,7 +4,7 @@ import React from "react";
 import classNames from "classnames/bind";
 import styles from "./user.module.scss";
 import { useWallet } from "@solana/wallet-adapter-react";
-
+import { useSession } from "next-auth/react";
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -14,6 +14,7 @@ interface IProps {
 
 const User = ({ className }: IProps) => {
   const { publicKey } = useWallet();
+  const { data: session } = useSession();
   const classes = cx(
     {
       user: true,
@@ -24,11 +25,17 @@ const User = ({ className }: IProps) => {
   return (
     <div className={classes}>
       <div>
-        <p>Welcome to your personal overview</p>
+        <span>
+          {session
+            ? "Welcome to your personal overview"
+            : "Putting you first, leveraging Solana for seamless claims"}
+        </span>
       </div>
-      <div>
-        <h4 className={styles.address}>{publicKey?.toBase58()}</h4>
-      </div>
+      {session && (
+        <div>
+          <h4 className={styles.address}>{publicKey?.toBase58()}</h4>
+        </div>
+      )}
     </div>
   );
 };
