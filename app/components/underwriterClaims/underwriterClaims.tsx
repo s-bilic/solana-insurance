@@ -81,7 +81,7 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
     {
       title: "Status",
       dataIndex: "status",
-      render: (value, { id, status }) => (
+      render: (value, { id, status, transaction }) => (
         <Select
           defaultValue={status}
           status={
@@ -98,6 +98,7 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
             { value: "reviewing", label: "Reviewing" },
             { value: "denied", label: "Denied" },
           ]}
+          disabled={transaction !== "-"}
         />
       ),
     },

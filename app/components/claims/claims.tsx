@@ -73,7 +73,7 @@ const Claims = ({ className }: IProps) => {
 
   return (
     <div className={classes}>
-      <h6 className={styles.title}>{`Open claims (${claims?.length})`}</h6>
+      <h6 className={styles.title}>{`Claims (${claims?.length})`}</h6>
       <div className={styles.items}>
         <Row gutter={[24, 24]}>
           {claims?.map((item, index) => {
