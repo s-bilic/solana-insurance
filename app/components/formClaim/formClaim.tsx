@@ -43,6 +43,8 @@ const FormClaim = ({ className }: IProps) => {
     const body = {
       date: values?.date,
       subject: values?.subject,
+      status: "reviewing",
+      transaction: "-",
       description: values?.description,
       value: values?.cost,
       completed: false,

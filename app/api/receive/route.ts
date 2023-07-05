@@ -39,6 +39,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
       data: {
         completed: true,
+        transaction: signature,
       },
     });
     // Transaction successful

@@ -5,7 +5,12 @@ import { useAtom, atom } from "jotai";
 import { submittedClaimAtom } from "../../utils/atom";
 import classNames from "classnames/bind";
 import styles from "./claims.module.scss";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  TagOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import { Card, Button, Row, Col, Space, Descriptions, Tag } from "antd";
 import { toast } from "react-toastify";
 
@@ -19,8 +24,6 @@ interface IProps {
 const Claims = ({ className }: IProps) => {
   const [submittedClaim] = useAtom(submittedClaimAtom);
   const [claims, setClaims] = useState([]);
-  const [processing, setProcessing] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
   const { data: session } = useSession();
 
   const classes = cx(
@@ -42,8 +45,6 @@ const Claims = ({ className }: IProps) => {
   };
 
   const receiveSolana = async (claimId) => {
-    setProcessing(true);
-    setConfirmed(false);
     if (session) {
       const body = {
         address: session?.publicKey,
@@ -61,11 +62,7 @@ const Claims = ({ className }: IProps) => {
         }
       );
 
-      const data = await response.json();
-
-      setProcessing(false);
-      setConfirmed(true);
-
+      await response.json();
       fetchClaims();
     }
   };
@@ -87,9 +84,47 @@ const Claims = ({ className }: IProps) => {
                   style={{ border: "solid 1px #dddddd" }}
                   headStyle={{ borderBottom: "solid 1px #dddddd" }}
                   extra={
-                    <Tag icon={<CheckCircleOutlined />} color="success">
-                      approved
-                    </Tag>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      {item?.transaction !== "-" && (
+                        <Tag
+                          icon={<TagOutlined />}
+                          color={"purple"}
+                          style={{ display: "flex" }}
+                        >
+                          <div
+                            style={{
+                              width: "100%",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              maxWidth: "20ch",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            <a
+                              href={`https://solana.fm/tx/${item?.transaction}?cluster=devnet-solana`}
+                              target={"_blank"}
+                            >
+                              {item?.transaction}
+                            </a>
+                          </div>
+                        </Tag>
+                      )}
+                      {item?.status === "approved" && (
+                        <Tag icon={<CheckCircleOutlined />} color="success">
+                          {item?.status}
+                        </Tag>
+                      )}
+                      {item?.status === "reviewing" && (
+                        <Tag icon={<SyncOutlined spin />} color="processing">
+                          {item?.status}
+                        </Tag>
+                      )}
+                      {item?.status === "denied" && (
+                        <Tag icon={<CloseCircleOutlined />} color="error">
+                          {item?.status}
+                        </Tag>
+                      )}
+                    </div>
                   }
                   title={item?.subject}
                   {...item}
@@ -109,8 +144,13 @@ const Claims = ({ className }: IProps) => {
                         {formattedDate && formattedDate.toLocaleDateString()}
                       </Descriptions.Item>
                     </Descriptions>
+
                     <Button
-                      disabled={item?.completed}
+                      disabled={
+                        item?.completed ||
+                        item?.status === "denied" ||
+                        item?.status === "reviewing"
+                      }
                       onClick={() => receiveSolana(item?.id)}
                       key={"button"}
                       type={"primary"}

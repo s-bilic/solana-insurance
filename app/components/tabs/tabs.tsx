@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { useAtom } from "jotai";
 import { submittedClaimAtom, submittedPaymentAtom } from "../../utils/atom";
 
-const CustomTabs = () => {
+const CustomTabs = ({ items }) => {
   const { data: session } = useSession();
   const [submittedClaim, setSubmittedClaim] = useAtom(submittedClaimAtom);
   const [submittedPayment] = useAtom(submittedPaymentAtom);
@@ -16,51 +16,53 @@ const CustomTabs = () => {
   const [payments, setPayments] = useState([]);
   const [completedPayment, setCompletedPayment] = useState(true);
 
-  const items: TabsProps["items"] = [
-    {
-      key: "1",
-      label: `Overview`,
-      disabled: !session,
-      children: (
-        <div>
-          {!session ? (
-            <Empty
-              description={"Connect your wallet to enable all features"}
-              style={{
-                border: "dashed 1px #c5c5c5",
-                borderRadius: 8,
-                padding: 40,
-              }}
-            >
-              <Tooltip title="Don't have a wallet yet?">
-                <Button
-                  href="https://phantom.app/"
-                  type="primary"
-                  target={"_blank"}
+  const itemsArray: TabsProps["items"] = items
+    ? items
+    : [
+        {
+          key: "1",
+          label: `Overview`,
+          disabled: !session,
+          children: (
+            <div>
+              {!session ? (
+                <Empty
+                  description={"Connect your wallet to enable all features"}
+                  style={{
+                    border: "dashed 1px #c5c5c5",
+                    borderRadius: 8,
+                    padding: 40,
+                  }}
                 >
-                  Download Wallet
-                </Button>
-              </Tooltip>
-            </Empty>
-          ) : (
-            <Claims />
-          )}
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: `Payments`,
-      disabled: !session,
-      children: <Payments data={payments} />,
-    },
-    {
-      key: "3",
-      label: `Submit claim`,
-      disabled: !completedPayment || !session,
-      children: <FormClaim />,
-    },
-  ];
+                  <Tooltip title="Don't have a wallet yet?">
+                    <Button
+                      href="https://phantom.app/"
+                      type="primary"
+                      target={"_blank"}
+                    >
+                      Download Wallet
+                    </Button>
+                  </Tooltip>
+                </Empty>
+              ) : (
+                <Claims />
+              )}
+            </div>
+          ),
+        },
+        {
+          key: "2",
+          label: `Payments`,
+          disabled: !session,
+          children: <Payments data={payments} />,
+        },
+        {
+          key: "3",
+          label: `Submit claim`,
+          disabled: !completedPayment || !session,
+          children: <FormClaim />,
+        },
+      ];
 
   useEffect(() => {
     setSubmittedClaim(false);
@@ -87,9 +89,9 @@ const CustomTabs = () => {
       <Tabs
         defaultActiveKey={"1"}
         activeKey={submittedClaim ? "1" : undefined}
-        items={items}
+        items={itemsArray}
       />
-      {!completedPayment && session && (
+      {!completedPayment && session && !items && (
         <Alert
           message="Uncompleted payment"
           description="In order to submit claims, make your payment complete"
