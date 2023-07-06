@@ -136,10 +136,12 @@ const Claims = ({ className }: IProps) => {
                   >
                     {item.description}
                     <Descriptions size="small">
-                      <Descriptions.Item label="Loss">
-                        {item?.value}
+                      <Descriptions.Item label="Lost value">
+                        ${item?.loss}
                       </Descriptions.Item>
-                      <Descriptions.Item label="Covered">$30</Descriptions.Item>
+                      <Descriptions.Item label="Covered">
+                        $1000
+                      </Descriptions.Item>
                       <Descriptions.Item label="Date">
                         {formattedDate && formattedDate.toLocaleDateString()}
                       </Descriptions.Item>
@@ -155,7 +157,7 @@ const Claims = ({ className }: IProps) => {
                       key={"button"}
                       type={"primary"}
                     >
-                      Claim
+                      {item?.claim === 0 ? "Claim" : `Claim $${item?.claim}`}
                     </Button>
                   </Space>
                 </Card>

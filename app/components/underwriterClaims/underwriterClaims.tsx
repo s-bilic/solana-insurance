@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import styles from "./underwriterClaims.module.scss";
-import { Button, Table, Select, Space } from "antd";
+import { Button, Table, Select, Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { toast } from "react-toastify";
 
@@ -43,29 +43,72 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
     setUnderwriterClaims(updatedData);
   };
 
+  const handleClaimChange = (id, value) => {
+    // Find the row with the matching id
+    const updatedData = underwriterClaims.map((row) => {
+      if (row.id === id) {
+        return { ...row, claim: Number(value) };
+      }
+      return row;
+    });
+
+    setUnderwriterClaims(updatedData);
+  };
+
   const columns: ColumnsType<DataType> = [
     {
-      title: "Subject",
-      dataIndex: "subject",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-    },
-    {
-      title: "Date",
-      dataIndex: "date",
-    },
-    {
-      title: "Transaction",
-      dataIndex: "transaction",
+      title: "Address",
+      dataIndex: "address",
+      width: "10%",
       render: (text) => (
         <div
           style={{
             width: "100%",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            maxWidth: "40ch",
+            maxWidth: "5ch",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: "Subject",
+      dataIndex: "subject",
+      width: "20%",
+    },
+    Table.EXPAND_COLUMN,
+    {
+      title: "Loss",
+      dataIndex: "loss",
+      width: "5%",
+    },
+    {
+      title: "Claim",
+      dataIndex: "claim",
+      width: "15%",
+      render: (text, { id }) => (
+        <Input
+          type="number"
+          prefix={"$"}
+          value={text}
+          onChange={(e) => handleClaimChange(id, e.target.value)}
+        />
+      ),
+    },
+    {
+      title: "Transaction",
+      dataIndex: "transaction",
+      width: "10%",
+      render: (text) => (
+        <div
+          style={{
+            width: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "10ch",
             whiteSpace: "nowrap",
           }}
         >
@@ -81,6 +124,7 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
     {
       title: "Status",
       dataIndex: "status",
+      width: "10%",
       render: (value, { id, status, transaction }) => (
         <Select
           defaultValue={status}
@@ -106,8 +150,9 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
 
   const rows: DataType[] = underwriterClaims?.map((item, index) => ({
     ...item,
+    address: item?.userAddress,
+    loss: `$${item?.loss}`,
     key: index,
-    date: new Date(item?.date).toLocaleDateString(),
   }));
 
   const classes = cx(
@@ -138,7 +183,7 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    // console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -157,7 +202,7 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
 
   console.log(selectedRows);
   const hasSelected = selectedRowKeys.length > 0;
-
+  console.log(underwriterClaims, "data");
   return (
     <div className={classes}>
       <h6
@@ -184,6 +229,11 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
       </div>
       <Table
         rowSelection={rowSelection}
+        expandable={{
+          expandedRowRender: (record) => (
+            <p style={{ margin: 0 }}>{record.description}</p>
+          ),
+        }}
         columns={columns}
         dataSource={rows}
         pagination={{ position: ["bottomCenter"] }}

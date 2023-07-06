@@ -56,7 +56,9 @@ const SignIn = () => {
   return (
     <div>
       {!session && <WalletMultiButton />}
-      {session && <WalletDisconnectButton onClick={signOut} />}
+      {session && (
+        <WalletDisconnectButton onClick={() => signOut({ callbackUrl: "/" })} />
+      )}
     </div>
   );
 };

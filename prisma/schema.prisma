@@ -26,7 +26,8 @@ model Claim {
   status      String
   subject     String
   description String
-  value       Float
+  loss        Float
+  claim       Float
   completed   Boolean
   userAddress String
   user        User     @relation(fields: [userAddress], references: [address])

@@ -10,7 +10,8 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     transaction,
     description,
     completed,
-    value,
+    loss,
+    claim,
     address,
   } = await req.json();
 
@@ -21,7 +22,8 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       status,
       transaction,
       description,
-      value,
+      loss,
+      claim,
       completed,
       user: {
         connect: {
@@ -40,12 +42,13 @@ export async function PUT(req: NextApiRequest, res: NextApiResponse) {
   try {
     const data = await prisma.$transaction(
       items.map(async (item) => {
-        const { id, status } = item;
+        const { id, status, claim } = item;
 
         await prisma.claim.update({
           where: { id }, // Update the item based on its ID
           data: {
             status,
+            claim,
           },
         });
       })

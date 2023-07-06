@@ -46,7 +46,8 @@ const FormClaim = ({ className }: IProps) => {
       status: "reviewing",
       transaction: "-",
       description: values?.description,
-      value: values?.cost,
+      loss: values?.cost,
+      claim: 0,
       completed: false,
       address: session?.publicKey,
     };
@@ -105,8 +106,8 @@ const FormClaim = ({ className }: IProps) => {
               { value: "Wind and Hail Damage", label: "Wind and Hail Damage" },
               { value: "Fire Damage", label: "Fire Damage" },
               {
-                value: "Customer Injury and Property Damage",
-                label: "Customer Injury and Property Damage",
+                value: "Property Damage",
+                label: "Property Damage",
               },
             ]}
           />
@@ -125,7 +126,7 @@ const FormClaim = ({ className }: IProps) => {
           name="cost"
           rules={[{ required: true, message: "Please input the lost value!" }]}
         >
-          <InputNumber addonBefore="+" addonAfter="$" defaultValue={100} />
+          <InputNumber addonBefore="$" />
         </Form.Item>
 
         <Form.Item
