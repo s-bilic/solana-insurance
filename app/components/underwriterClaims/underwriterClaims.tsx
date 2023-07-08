@@ -19,7 +19,6 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
   const { data: session } = useSession();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRows, setSelectedRows] = useState<React.Key[]>([]);
-
   const [loading, setLoading] = useState(false);
 
   interface DataType {
@@ -89,12 +88,13 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
       title: "Claim",
       dataIndex: "claim",
       width: "15%",
-      render: (text, { id }) => (
+      render: (text, { id, transaction }) => (
         <Input
           type="number"
           prefix={"$"}
           value={text}
           onChange={(e) => handleClaimChange(id, e.target.value)}
+          disabled={transaction !== "-"}
         />
       ),
     },
@@ -183,13 +183,15 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    // console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+    getCheckboxProps: (record: DataType) => ({
+      disabled: record.transaction !== "-", // Column configuration not to be checked
+    }),
   };
 
   useEffect(() => {
@@ -200,9 +202,8 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
     setSelectedRows(selectedRowsData);
   }, [selectedRowKeys, underwriterClaims]);
 
-  console.log(selectedRows);
   const hasSelected = selectedRowKeys.length > 0;
-  console.log(underwriterClaims, "data");
+
   return (
     <div className={classes}>
       <h6

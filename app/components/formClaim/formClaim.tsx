@@ -51,7 +51,6 @@ const FormClaim = ({ className }: IProps) => {
       completed: false,
       address: session?.publicKey,
     };
-    console.log(body, "xd");
 
     await toast.promise(
       fetch("/api/claim", {

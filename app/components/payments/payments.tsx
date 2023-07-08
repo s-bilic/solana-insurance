@@ -74,7 +74,6 @@ const Payments = ({ className, data }: IProps) => {
   useEffect(() => {
     if (confirmed) {
       createPayment();
-      console.log("paid");
     }
   }, [confirmed]);
 

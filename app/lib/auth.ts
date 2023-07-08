@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
 
           // Create the default payments data set for each user.
           if (!existingUser || existingUser.payments.length === 0) {
-            const defaultPayment = await prisma.payment.create({
+            await prisma.payment.create({
               data: {
                 date: new Date(),
                 transaction: "-",
@@ -76,8 +76,6 @@ export const authOptions: NextAuthOptions = {
                 },
               },
             });
-
-            console.log("Default payment created:", defaultPayment);
           }
 
           return {

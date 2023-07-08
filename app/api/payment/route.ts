@@ -5,8 +5,6 @@ import { NextResponse } from "next/server";
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
   const { date, transaction, amount, completed, address } = await req.json();
 
-  console.log(date, transaction, amount, completed, address);
-
   if (amount === 0.01) {
     // Check if the payment already exists based on the address
     const existingPayment = await prisma.payment.findFirst({
