@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { submittedClaimAtom } from "../../utils/atom";
 import { useSession } from "next-auth/react";
 import classNames from "classnames/bind";
-import styles from "./FormClaim.module.scss";
+import styles from "./formClaim.module.scss";
 import {
   Button,
   Checkbox,
