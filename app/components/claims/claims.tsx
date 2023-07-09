@@ -24,6 +24,7 @@ interface IProps {
 const Claims = ({ className }: IProps) => {
   const [submittedClaim] = useAtom(submittedClaimAtom);
   const [claims, setClaims] = useState([]);
+  const [processingCard, setProcessingCard] = useState(null);
   const { data: session } = useSession();
 
   const classes = cx(
@@ -44,8 +45,9 @@ const Claims = ({ className }: IProps) => {
     }
   };
 
-  const receiveSolana = async (claimId) => {
+  const receiveSolana = async (claimId, index) => {
     if (session) {
+      setProcessingCard(index);
       const body = {
         address: session?.publicKey,
         claimId: claimId,
@@ -66,11 +68,12 @@ const Claims = ({ className }: IProps) => {
         pending: "Processing...",
         error: {
           render({ data }) {
+            setProcessingCard(null);
             return <div>{data?.message}</div>;
           },
         },
       });
-
+      setProcessingCard(null);
       fetchClaims();
     }
   };
@@ -89,7 +92,13 @@ const Claims = ({ className }: IProps) => {
             return (
               <Col key={index} span={24}>
                 <Card
-                  style={{ border: "solid 1px #dddddd" }}
+                  style={{
+                    border: "solid 1px #dddddd",
+                    opacity:
+                      processingCard !== null && processingCard !== index
+                        ? "0.3"
+                        : "1",
+                  }}
                   headStyle={{ borderBottom: "solid 1px #dddddd" }}
                   extra={
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -159,9 +168,10 @@ const Claims = ({ className }: IProps) => {
                       disabled={
                         item?.completed ||
                         item?.status === "denied" ||
-                        item?.status === "reviewing"
+                        item?.status === "reviewing" ||
+                        (processingCard !== null && processingCard !== index)
                       }
-                      onClick={() => receiveSolana(item?.id)}
+                      onClick={() => receiveSolana(item?.id, index)}
                       key={"button"}
                       type={"primary"}
                     >
