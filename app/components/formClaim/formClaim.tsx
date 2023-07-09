@@ -52,19 +52,27 @@ const FormClaim = ({ className }: IProps) => {
       address: session?.publicKey,
     };
 
-    await toast.promise(
+    const response = new Promise((resolve, reject) => {
       fetch("/api/claim", {
         method: "POST",
         body: JSON.stringify(body),
-      }),
-      {
-        success: "New claim created",
-        pending: "Processing...",
-        error: "Something went wrong",
-      }
-    );
-    setSubmittedClaim(true);
+      })
+        .then((res) => res.json())
+        .then((data) => resolve(data))
+        .catch((err) => reject(err));
+    });
 
+    await toast.promise(response, {
+      success: "New claim created",
+      pending: "Processing...",
+      error: {
+        render({ data }) {
+          return <div>{data?.message}</div>;
+        },
+      },
+    });
+
+    setSubmittedClaim(true);
     formRef?.current.resetFields();
   };
 

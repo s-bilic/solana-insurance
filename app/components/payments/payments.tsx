@@ -52,20 +52,25 @@ const Payments = ({ className, data }: IProps) => {
         address: session?.publicKey,
       };
 
-      await toast.promise(
+      const response = new Promise((resolve, reject) => {
         fetch("/api/payment", {
           method: "POST",
           body: JSON.stringify(body),
-        }),
-        {
-          success: "Payment received",
-          pending: "Processing...",
-          error: "Something went wrong",
+        })
+          .then((res) => res.json())
+          .then((data) => resolve(data))
+          .catch((err) => reject(err));
+      });
+
+      await toast.promise(response, {
+        success: "Payment received",
+        pending: "Processing...",
+        error: {
+          render({ data }) {
+            return <div>{data?.message}</div>;
+          },
         },
-        {
-          toastId: "hi",
-        }
-      );
+      });
 
       setSubmittedPayment(true);
     }

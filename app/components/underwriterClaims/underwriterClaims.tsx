@@ -166,19 +166,25 @@ const UnderwriterClaims = ({ className, data }: IProps) => {
     const body = selectedRows;
 
     if (session) {
-      const response = await toast.promise(
-        fetch(`/api/claim`, {
+      const response = new Promise((resolve, reject) => {
+        fetch("/api/claim", {
           method: "PUT",
           body: JSON.stringify(body),
-        }),
-        {
-          success: "Claim updated",
-          pending: "Processing...",
-          error: "Something went wrong",
-        }
-      );
+        })
+          .then((res) => res.json())
+          .then((data) => resolve(data))
+          .catch((err) => reject(err));
+      });
 
-      await response.json();
+      await toast.promise(response, {
+        success: "Claim updated",
+        pending: "Processing...",
+        error: {
+          render({ data }) {
+            return <div>{data?.message}</div>;
+          },
+        },
+      });
     }
   };
 

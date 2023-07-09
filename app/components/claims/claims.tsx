@@ -50,19 +50,27 @@ const Claims = ({ className }: IProps) => {
         address: session?.publicKey,
         claimId: claimId,
       };
-      const response = await toast.promise(
+
+      const response = new Promise((resolve, reject) => {
         fetch("/api/receive", {
           method: "POST",
           body: JSON.stringify(body),
-        }),
-        {
-          success: "Claimed succesfully",
-          pending: "Processing...",
-          error: "Something went wrong",
-        }
-      );
+        })
+          .then((res) => res.json())
+          .then((data) => resolve(data))
+          .catch((err) => reject(err));
+      });
 
-      await response.json();
+      await toast.promise(response, {
+        success: "Claimed succesfully",
+        pending: "Processing...",
+        error: {
+          render({ data }) {
+            return <div>{data?.message}</div>;
+          },
+        },
+      });
+
       fetchClaims();
     }
   };
