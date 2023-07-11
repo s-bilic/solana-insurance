@@ -70,9 +70,7 @@ const CustomTabs = ({ items }) => {
 
   const fetchPayments = async () => {
     if (session) {
-      const response = await fetch(
-        `/api/payment?address=${session?.publicKey}`
-      );
+      const response = await fetch(`/api/payment`);
       const data = await response.json();
 
       setPayments(data);

@@ -28,7 +28,7 @@ const User = ({ className }: IProps) => {
         <span>
           {session
             ? "Welcome to your personal overview"
-            : "Putting you first, leveraging Solana for seamless claims"}
+            : "Leveraging Solana for claims"}
         </span>
       </div>
       {session && (

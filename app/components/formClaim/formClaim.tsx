@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { submittedClaimAtom } from "../../utils/atom";
-import { useSession } from "next-auth/react";
 import classNames from "classnames/bind";
 import styles from "./formClaim.module.scss";
 import {
@@ -28,7 +27,6 @@ const FormClaim = ({ className }: IProps) => {
   const [submittedClaim, setSubmittedClaim] = useAtom(submittedClaimAtom);
   const formRef = React.createRef();
   const [form] = Form.useForm();
-  const { data: session } = useSession();
 
   const classes = cx(
     {
@@ -49,7 +47,6 @@ const FormClaim = ({ className }: IProps) => {
       loss: values?.cost,
       claim: 0,
       completed: false,
-      address: session?.publicKey,
     };
 
     const response = new Promise((resolve, reject) => {

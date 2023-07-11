@@ -36,7 +36,7 @@ const Claims = ({ className }: IProps) => {
 
   const fetchClaims = async () => {
     if (session) {
-      const response = await fetch(`/api/claim?address=${session?.publicKey}`, {
+      const response = await fetch(`/api/claim`, {
         method: "GET",
       });
 
@@ -49,7 +49,6 @@ const Claims = ({ className }: IProps) => {
     if (session) {
       setProcessingCard(index);
       const body = {
-        address: session?.publicKey,
         claimId: claimId,
       };
 

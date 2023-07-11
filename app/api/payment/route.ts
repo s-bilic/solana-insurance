@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "app/lib/prisma";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "app/lib/auth";
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
   const { date, transaction, amount, completed, address } = await req.json();
@@ -33,13 +35,16 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const { searchParams } = new URL(req.url);
+  const session = await getServerSession(authOptions);
 
-  const address = searchParams.get("address");
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated" });
+  }
+
   const data = await prisma.payment.findMany({
     where: {
       user: {
-        address: address as string,
+        address: session?.user?.name as string,
       },
     },
   });

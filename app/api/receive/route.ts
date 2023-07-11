@@ -4,17 +4,24 @@ import { prisma } from "../../lib/prisma";
 import { AnchorProvider, BN, Program, Wallet } from "@coral-xyz/anchor";
 import idl from "../../utils/idl.json";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { getServerSession } from "next-auth";
+import { authOptions } from "app/lib/auth";
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { address, claimId } = await req.json();
+  const session = await getServerSession(authOptions);
+  const { claimId } = await req.json();
   const solanaNetwork = "https://api.devnet.solana.com";
   const connection = new Connection(solanaNetwork);
+
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated" });
+  }
 
   // Sender's wallet address and private key
   const fromAccount = Keypair.fromSecretKey(
     new Uint8Array(process.env.PRIVATE_WALLET.split(",").map(Number))
   );
-  const toAccount = new PublicKey(address);
+  const toAccount = new PublicKey(session?.user?.name as string);
   const wallet = new Wallet(fromAccount);
   const provider = new AnchorProvider(connection, wallet, {
     preflightCommitment: "processed",

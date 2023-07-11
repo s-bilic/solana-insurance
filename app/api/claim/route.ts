@@ -1,8 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../lib/prisma";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "app/lib/auth";
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession(authOptions);
+
   const {
     date,
     subject,
@@ -12,8 +16,11 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     completed,
     loss,
     claim,
-    address,
   } = await req.json();
+
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated" });
+  }
 
   const data = await prisma.claim.create({
     data: {
@@ -27,7 +34,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       completed,
       user: {
         connect: {
-          address,
+          address: session?.user?.name as string,
         },
       },
     },
@@ -37,7 +44,13 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function PUT(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession(authOptions);
   const items = await req.json();
+
+  // Only underwriters can update claims
+  if (session?.user?.name !== process.env.UNDERWRITER_ADDRESS) {
+    return NextResponse.json({ message: "Not authenticated" });
+  }
 
   try {
     const data = await prisma.$transaction(
@@ -53,40 +66,29 @@ export async function PUT(req: NextApiRequest, res: NextApiResponse) {
         });
       })
     );
-
     return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json(error);
+  } catch (e) {
+    return NextResponse.json(e);
   }
 }
 
-export async function GET(
-  req: NextApiRequest,
-  { params }: any,
-  res: NextApiResponse<any>
-) {
-  let data;
-  const { searchParams } = new URL(req.url);
-  const address = searchParams.get("address");
+export async function GET(req: NextApiRequest, res: NextApiResponse<any>) {
+  const session = await getServerSession(authOptions);
 
-  if (address) {
-    data = await prisma.claim.findMany({
-      where: {
-        user: {
-          address: address as string,
-        },
-      },
-      orderBy: {
-        id: "desc",
-      },
-    });
-  } else {
-    data = await prisma.claim.findMany({
-      orderBy: {
-        id: "desc",
-      },
-    });
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated" });
   }
+
+  const data = await prisma.claim.findMany({
+    where: {
+      user: {
+        address: session?.user?.name as string,
+      },
+    },
+    orderBy: {
+      id: "desc",
+    },
+  });
 
   return NextResponse.json(data);
 }
