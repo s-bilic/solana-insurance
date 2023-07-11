@@ -9,15 +9,18 @@ import {
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import bs58 from "bs58";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
 
   const wallet = useWallet();
   const walletModal = useWalletModal();
 
   const handleSignIn = async () => {
+    setLoading(true);
     try {
       if (!wallet.connected) {
         walletModal.setVisible(true);
@@ -37,13 +40,16 @@ const SignIn = () => {
       const signature = await wallet.signMessage(data);
       const serializedSignature = bs58.encode(signature);
 
-      signIn("credentials", {
+      await signIn("credentials", {
         message: JSON.stringify(message),
         redirect: false,
         signature: serializedSignature,
       });
+
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -52,6 +58,14 @@ const SignIn = () => {
       handleSignIn();
     }
   }, [wallet.connected]);
+
+  useEffect(() => {
+    if (loading) {
+      toast.loading("Signing in...");
+    } else {
+      toast.dismiss();
+    }
+  }, [loading]);
 
   return (
     <div>
