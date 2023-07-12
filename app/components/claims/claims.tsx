@@ -68,7 +68,11 @@ const Claims = ({ className }: IProps) => {
         error: {
           render({ data }) {
             setProcessingCard(null);
-            return <div>{data?.message}</div>;
+            return (
+              <div>
+                Timeout: This request reached the 10 second limit, please retry
+              </div>
+            );
           },
         },
       });
