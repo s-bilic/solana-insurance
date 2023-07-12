@@ -166,7 +166,7 @@ const Payments = ({ className, data }: IProps) => {
 
   return (
     <div className={classes}>
-      <Table columns={columns} dataSource={rows} />
+      <Table scroll={{ x: true }} columns={columns} dataSource={rows} />
     </div>
   );
 };

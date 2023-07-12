@@ -136,12 +136,14 @@ const FormClaim = ({ className }: IProps) => {
         <Form.Item
           name="agree"
           valuePropName="agree"
-          wrapperCol={{ offset: 8, span: 16 }}
+          wrapperCol={{ sm: { offset: 8, span: 16 }, xs: { offset: 0 } }}
         >
           <Checkbox>I agree with the terms and conditions</Checkbox>
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item
+          wrapperCol={{ sm: { offset: 8, span: 16 }, xs: { offset: 0 } }}
+        >
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
