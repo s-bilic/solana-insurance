@@ -48,7 +48,9 @@ export async function PUT(req: NextApiRequest, res: NextApiResponse) {
   const items = await req.json();
 
   // Only underwriters can update claims
-  if (session?.user?.name !== process.env.UNDERWRITER_ADDRESS) {
+  if (
+    !process.env.UNDERWRITER_ADDRESS.split(", ").includes(session?.user?.name)
+  ) {
     return NextResponse.json({ message: "Not authenticated" });
   }
 

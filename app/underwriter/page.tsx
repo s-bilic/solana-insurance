@@ -8,8 +8,9 @@ import { notFound } from "next/navigation";
 export default async function Underwriter() {
   const session = await getServerSession(authOptions);
   const claimsData = await prisma.claim.findMany({ orderBy: { id: "desc" } });
-
-  if (process.env.UNDERWRITER_ADDRESS !== session?.publicKey) {
+  if (
+    !process.env.UNDERWRITER_ADDRESS.split(", ").includes(session?.publicKey)
+  ) {
     return notFound();
   }
 
