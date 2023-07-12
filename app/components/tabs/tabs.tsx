@@ -7,6 +7,7 @@ import FormClaim from "../formClaim/formClaim";
 import { useSession } from "next-auth/react";
 import { useAtom } from "jotai";
 import { submittedClaimAtom, submittedPaymentAtom } from "../../utils/atom";
+import FloatingButton from "../floatingButton/floatingButton";
 
 const CustomTabs = ({ items }) => {
   const { data: session } = useSession();
@@ -98,6 +99,7 @@ const CustomTabs = ({ items }) => {
           closable
         />
       )}
+      {session && <FloatingButton />}
     </>
   );
 };
