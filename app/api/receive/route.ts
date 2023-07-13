@@ -21,15 +21,20 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
   const fromAccount = Keypair.fromSecretKey(
     new Uint8Array(process.env.PRIVATE_WALLET.split(",").map(Number))
   );
+  // Connected user wallet address
   const toAccount = new PublicKey(session?.user?.name as string);
+
+  // Anchor provider setup
   const wallet = new Wallet(fromAccount);
   const provider = new AnchorProvider(connection, wallet, {
     preflightCommitment: "processed",
   });
-
   const program = new Program(idl, idl.metadata.address, provider);
-  const lamports = new BN(1000000);
 
+  // Claimable amount (0.01 SOL)
+  const lamports = new BN(10000000);
+
+  // Smart contract program
   const signature = await program.methods
     .transferLamports(lamports)
     .accounts({

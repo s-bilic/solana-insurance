@@ -1,13 +1,12 @@
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
-  Keypair,
   LAMPORTS_PER_SOL,
+  PublicKey,
   SystemProgram,
   Transaction,
 } from "@solana/web3.js";
 import { useCallback, useState } from "react";
-LAMPORTS_PER_SOL;
 
 const SendSolana = () => {
   const { connection } = useConnection();
@@ -15,6 +14,9 @@ const SendSolana = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [signature, setSignature] = useState("");
+
+  const from = publicKey as PublicKey;
+  const to = new PublicKey("8V581oTaLYvyUdNwg2ha3ePyv4SDHjAT3tAYQHNcRHUN");
 
   const init = useCallback(
     async (amount: number) => {
@@ -26,8 +28,8 @@ const SendSolana = () => {
 
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: Keypair.generate().publicKey,
+          fromPubkey: from,
+          toPubkey: to,
           lamports: amount * LAMPORTS_PER_SOL,
         })
       );
